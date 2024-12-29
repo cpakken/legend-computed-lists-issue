@@ -1,3 +1,0 @@
-  Thanks you so much for making this library and the team behind it. I loved mobx / mobx-state-tree and I find legendstate to be such a great evolution from them. Smaller bundle size with 1st party react components and great ergonomic API design that plugs right in to my codebase. It's severly underrated and I hope in 2025 people will realize what a great state management library it is. Given how popular mobx is, I think people don't realize this library even exists. 
-
-That being said, while it works well with 95% of use cases, there seems to be some reactivity issues when it comes to computed observables. Espcially when updating computed lists when deleting from origin. I've made an issue for this please take a look when you have the time.
