@@ -55,7 +55,7 @@ export const state$ = observable({
   filteredList: () => state$.itemList.filter((item) => item.value.get() > 40000),
 
   //IF DELETED ITEMS ORDERED FIRST IN LIST, THEN TOGGLE RANDOMIZE TO SEE SORTED (TAB WILL FREEZE)
-   sortedList: () => $.itemList.sort((a, b) => a.value - b.value)
+  sortedList: () => [...state$.itemList].sort((a, b) => a.value.get() - b.value.get())
 
 
 })
