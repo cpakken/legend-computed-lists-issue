@@ -49,6 +49,15 @@ export const state$ = observable({
     { value: 'ID_5_12345' } 
   ]
   */
+
+
+  //!NOTE When items are deleted (from first in list), the fitlered result is wrong. Index are wrong
+  filteredList: () => state$.itemList.filter((item) => item.value.get() > 40000),
+
+  //IF DELETED ITEMS ORDERED FIRST IN LIST, THEN TOGGLE RANDOMIZE TO SEE SORTED (TAB WILL FREEZE)
+   sortedList: () => $.itemList.sort((a, b) => a.value - b.value)
+
+
 })
 
 const itemMapper = weakMemo(({ id, value }: Observable<{ id: string; value: number }>) => {

@@ -1,6 +1,6 @@
-import { Computed, For, Memo, observer } from '@legendapp/state/react'
-import { state$, action, addItem, getRandomNum, deleteItem, removeItemPeek } from './state'
 import type { Observable } from '@legendapp/state'
+import { For, Memo, observer } from '@legendapp/state/react'
+import { action, addItem, deleteItem, getRandomNum, removeItemPeek, state$ } from './state'
 
 export const App = () => {
   console.log('App render')
@@ -37,9 +37,8 @@ export const App = () => {
         <div>
           <div>ITEM LIST:</div>
           <div>
-            <Memo>{() => 'LENGTH: ' + state$.itemList.length}</Memo>
+            <For each={state$.itemList}>{(item$) => <ItemJSON item$={item$} />}</For>
           </div>
-          <Memo>{() => JSON.stringify(state$.itemList.get(), null, 2)}</Memo>
         </div>
         <div>
           <div>ITEM LIST UI:</div>
@@ -53,29 +52,47 @@ export const App = () => {
             <Memo>{() => 'LENGTH: ' + state$.itemDerivedList.length}</Memo>
           </div>
           <div>
+            <For each={state$.itemDerivedList}>
+              {(item) => (
+                <div>
+                  <Memo>{() => item.value.get()}</Memo>
+                </div>
+              )}
+            </For>
+          </div>
+        </div>
+        <div>
+          <div>FILTERED LIST:</div>
+          <div>
+            <For each={state$.filteredList}>{(item) => <ItemJSON item$={item} />}</For>
+          </div>
+        </div>
+        <div>
+          <div>SORTED LIST:</div>
+          <div className="max-w-[250px]">
             <div>
-              <Memo>
-                {() =>
-                  JSON.stringify(
-                    state$.itemDerivedList.map((item) => item.value.get()),
-                    null,
-                    2
-                  )
-                }
-              </Memo>
+              IF DELETED ITEMS ORDERED FIRST IN LIST, THEN TOGGLE RANDOMIZE TO SEE SORTED (TAB WILL
+              FREEZE)
             </div>
-            <div>
-              <For each={state$.itemDerivedList}>
-                {(item) => (
-                  <div>
-                    <Memo>{() => item.value.get()}</Memo>
-                  </div>
-                )}
-              </For>
-            </div>
+            <div>UNCOMMENT TO SEE SORTED LIST</div>
+            {/* <For optimized each={state$.sortedList}>
+              {(item) => (
+                <div>
+                  <Memo>{() => JSON.stringify(item.get(), null, 2)}</Memo>
+                </div>
+              )}
+            </For> */}
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+const ItemJSON = ({ item$ }: { item$: Observable<{ id: string; value: number }> }) => {
+  return (
+    <div>
+      <Memo>{() => JSON.stringify(item$.get(), null, 2)}</Memo>
     </div>
   )
 }
@@ -89,19 +106,19 @@ const Item = observer(({ item$ }: { item$: Observable<{ id: string; value: numbe
         <div>{value.get()}</div>
       </div>
       <button
-        className="cursor-pointer hover:text-yellow-500"
-        onClick={() => value.set(getRandomNum)}
+        className="cursor-pointer font-bold text-blue-500 hover:text-blue-400"
+        onClick={() => value.set(getRandomNum())}
       >
         RANDOMIZE
       </button>
       <button
-        className="cursor-pointer text-red-500 hover:text-red-700"
+        className="cursor-pointer text-red-500 hover:text-red-400"
         onClick={() => item$.delete()}
       >
         DELETE
       </button>
       <button
-        className="cursor-pointer text-red-500 hover:text-red-700"
+        className="cursor-pointer text-red-500 hover:text-red-400"
         onClick={action(() => {
           item$.delete()
           state$.itemList.peek()

@@ -12,12 +12,20 @@ export const state$ = observable({
   items: Object.fromEntries(Array.from({ length: 5 }, (_, i) => createItemEntry(i + 1))),
   itemList: () => Object.values(state$.items),
   itemDerivedList: () => state$.itemList.map(itemMapper),
+
+  //!NOTE When items are deleted (from first in list), the fitlered result is wrong. Index are wrong
+  filteredList: () => state$.itemList.filter((item) => item.value.get() > 40000),
+  sortedList: () => [...state$.itemList].sort((a, b) => a.value.get() - b.value.get()),
+  // sortedList: () => Object.values(state$.items).sort((a, b) => a.value.get() - b.value.get()),
 })
 
 const itemMapper = weakMemo(({ id, value }: Observable<{ id: string; value: number }>) => {
   console.log('SHOULD BE MEMOIZED AND CREATED ONCE', id.get())
   return { value: () => id.get() + '_' + value.get() }
 })
+
+//@ts-ignore
+globalThis.$ = state$
 
 export const addItem = () => {
   const itemList = Object.values(state$.items)
