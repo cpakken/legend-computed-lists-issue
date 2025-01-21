@@ -1,5 +1,5 @@
 import type { Observable } from '@legendapp/state'
-import { For, Memo, observer } from '@legendapp/state/react'
+import { For, Memo, observer, use$ } from '@legendapp/state/react'
 import { action, addItem, deleteItem, getRandomNum, removeItemPeek, state$ } from './state'
 
 export const App = () => {
@@ -99,11 +99,12 @@ const ItemJSON = ({ item$ }: { item$: Observable<{ id: string; value: number }> 
 
 const Item = observer(({ item$ }: { item$: Observable<{ id: string; value: number }> }) => {
   const { id, value } = item$
+
   return (
     <div className="border border-gray-500 p-1 rounded select-none flex flex-col">
       <div className="flex justify-between">
-        <div>{id.get()}</div>
-        <div>{value.get()}</div>
+        <div>{use$(id)}</div>
+        <div>{use$(value)}</div>
       </div>
       <button
         className="cursor-pointer font-bold text-blue-500 hover:text-blue-400"
